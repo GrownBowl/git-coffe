@@ -18,23 +18,36 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>70</y>
       <width>800</width>
-      <height>571</height>
+      <height>531</height>
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="btn_new">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>575</y>
-      <width>171</width>
-      <height>23</height>
+      <x>170</x>
+      <y>10</y>
+      <width>180</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="text">
-     <string>Редактировать информацию</string>
+     <string>Добавить новую запись</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_save">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>10</y>
+      <width>180</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Сохранить изменения</string>
     </property>
    </widget>
   </widget>

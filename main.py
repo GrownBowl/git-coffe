@@ -1,18 +1,19 @@
 import sqlite3
 import sys
 
+from addEditCoffeeForm import Ui_MainWindow
+from UI_main import Ui_MainWindow as ui_main
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QInputDialog
 from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem
 
 
-class MyWidget(QMainWindow):
+class MyWidget(QMainWindow, ui_main):
     def __init__(self):
         super().__init__()
-        uic.loadUi("main.ui", self)
+        self.setupUi(self)
         self.titles = None
-        self.con = sqlite3.connect("coffee.sqlite")
-        self.modified = {}
+        self.con = sqlite3.connect("data/coffee.sqlite")
         self.init_item()
         self.edit_window = None
         self.pushButton.clicked.connect(self.run_edit)
@@ -23,7 +24,6 @@ class MyWidget(QMainWindow):
         self.tableWidget.setRowCount(len(item))
 
         if not item:
-            self.statusBar().showMessage('Ничего не нашлось')
             return
 
         self.tableWidget.setColumnCount(len(item[0]))
@@ -40,10 +40,12 @@ class MyWidget(QMainWindow):
         self.edit_window.show()
 
 
-class EditCoffe(MyWidget):
+class EditCoffe(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("addEditCoffeeForm.ui", self)
+        self.setupUi(self)
+        self.con = sqlite3.connect("data/coffee.sqlite")
+        self.modified = {}
         self.init_item()
         self.btn_new.clicked.connect(self.run_new)
         self.btn_save.clicked.connect(self.run_save)
@@ -99,6 +101,22 @@ class EditCoffe(MyWidget):
         self.modified[self.titles[item.column()]] = item.text()
         self.ind.append(item.row() + 1)
 
+    def init_item(self):
+        cur = self.con.cursor()
+        item = cur.execute("""SELECT * from coffe""").fetchall()
+        self.tableWidget.setRowCount(len(item))
+
+        if not item:
+            return
+
+        self.tableWidget.setColumnCount(len(item[0]))
+        self.titles = [description[0] for description in cur.description]
+
+        # Заполнили таблицу полученными элементами
+        for i, elem in enumerate(item):
+            for j, val in enumerate(elem):
+                self.tableWidget.setItem(i, j, QTableWidgetItem(str(val)))
+        self.modified = {}
 
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
